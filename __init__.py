@@ -1,6 +1,7 @@
 from gym.envs.registration import registry, register, make, spec
 
 from bandits import MultiArmedBanditEnv
+from bandits import MultiArmedBanditRegretEnv
 from bandits import ContextualBanditEnv
 
 register(

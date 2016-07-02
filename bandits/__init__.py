@@ -1,2 +1,3 @@
 from multi_armed_bandit import MultiArmedBanditEnv
+from multi_armed_bandit_regret import MultiArmedBanditRegretEnv
 from contextual_bandit import ContextualBanditEnv
