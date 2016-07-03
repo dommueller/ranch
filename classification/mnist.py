@@ -48,6 +48,16 @@ class MNISTEnv(gym.Env):
         outfile.write("\n".join("".join(["X" if x > 0. else "-" for x in line]) for line in self._get_current(self.X_train).reshape((28,28))) + "\n")
         outfile.write("Number: %d\n\n" % self._get_current(self.y_train))
 
+    def _close(self):
+        if hasattr(self, 'X_train'):
+            del self.X_train
+        if hasattr(self, 'y_train'):
+            del self.y_train
+        if hasattr(self, 'X_test'):
+            del self.X_test
+        if hasattr(self, 'y_test'):
+            del self.y_test
+
     def _get_current(self, array):
         return array[self.current_step]
 
