@@ -18,15 +18,15 @@ class MultiArmedBanditRegretEnv(gym.Env):
 
     def _reset(self):
         self.steps = 0
-        self.cum_reward = 0
+        self.summed_reward = 0
         self.probabilities = np.random.uniform(0, 1, self.action_space.n)
         return 0
 
     def _step(self, action):
         self.steps += 1
-        self.cum_reward += np.random.binomial(1, self.probabilities[action])
+        self.summed_reward += np.random.binomial(1, self.probabilities[action])
         if self.steps >= self.spec.timestep_limit:
-            regret = self.cum_reward - self.steps * np.max(self.probabilities)
-            return self.cum_reward, -regret, False, {"probabilities": self.probabilities}
+            regret = self.steps * np.max(self.probabilities) - self.summed_reward
+            return self.summed_reward, -regret, False, {"probabilities": self.probabilities}
         else:
-            return self.cum_reward, 0, False, {"probabilities": self.probabilities}
+            return self.summed_reward, 0, False, {"probabilities": self.probabilities}
