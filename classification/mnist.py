@@ -31,16 +31,16 @@ class MNISTEnv(gym.Env):
 
     def _step(self, action):
         reward = 1 if self._get_current(self.y_train) == action else 0
-        self.current_step += 1
-
-        if self.current_step >= self.spec.timestep_limit:
-            done = True
-            ob = self.X_train[-1]
-            info = {"number": self.y_train[-1]}
-        else:
+        
+        if self.current_step < self.spec.timestep_limit-1:
+            self.current_step += 1  
             done = False
-            ob = self._get_current(self.X_train)
-            info = {"number": self._get_current(self.y_train)}
+        else:
+            done = True
+
+        ob = self._get_current(self.X_train)
+        info = {"number": self._get_current(self.y_train)}
+
         return ob, reward, done, info
 
     def _render(self, mode='human', close=False):
@@ -65,7 +65,6 @@ class MNISTEnv(gym.Env):
         mnist = fetch_mldata('MNIST original')
         # Rescale the data, use the traditional train/test split
         self.X_test, self.y_test = mnist.data[self.test_size:] / 255., mnist.target[self.test_size:].astype(int)
-        return self._get_current(self.X_train)
         self.current_test_step = 0
         self.current_correct = 0
         return self.X_test[self.current_test_step]
@@ -75,7 +74,6 @@ class MNISTEnv(gym.Env):
         self.current_correct += reward
         self.current_test_step += 1
         acc = self.current_correct / float(self.current_test_step)
-        
 
         if self.current_test_step >= len(self.y_test):
             done = True
